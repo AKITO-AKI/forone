@@ -1,0 +1,19 @@
+{
+  "manifest_version": 3,
+  "name": "Forone Step1 (X Queue)",
+  "version": "0.1.0",
+  "description": "Step1: Extract tweets on X, enqueue into SW, and dispatch batches.",
+  "background": {
+    "service_worker": "sw.js",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://x.com/*"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "permissions": [],
+  "host_permissions": ["https://x.com/*"]
+}
