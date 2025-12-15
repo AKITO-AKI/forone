@@ -1,19 +1,29 @@
 {
   "manifest_version": 3,
-  "name": "Forone Step1 (X Queue)",
-  "version": "0.1.0",
-  "description": "Step1: Extract tweets on X, enqueue into SW, and dispatch batches.",
+  "name": "Forone (ふぉろね) - X Safety Assistant",
+  "version": "0.2.0",
+  "description": "X上の危険投稿を検知し、ふぉろねがやわらかく距離の取り方を提案します。",
+  "permissions": ["storage,alarms"],
+  "host_permissions": ["https://x.com/*", "https://api.openai.com/*"],
   "background": {
     "service_worker": "sw.js",
     "type": "module"
   },
+  "options_ui": {
+  "page": "options.html",
+  "open_in_tab": true
+},
+  "action": {
+    "default_title": "Forone",
+    "default_popup": "options.html"
+  },
+  "options_page": "options.html",
   "content_scripts": [
     {
       "matches": ["https://x.com/*"],
       "js": ["content.js"],
       "run_at": "document_idle"
     }
-  ],
-  "permissions": [],
-  "host_permissions": ["https://x.com/*"]
+    
+  ]
 }

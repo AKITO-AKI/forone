@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>follone 設定</title>
+  <link rel="stylesheet" href="options.css" />
+  <script src="options.js" defer></script>
+</head>
+<body>
+  <div class="bg"></div>
+
+  <header class="hero">
+    <div class="brand">
+      <div class="mark" aria-hidden="true"></div>
+      <div class="brandText">
+        <h1 class="logo" aria-label="follone">
+          <span>f</span><span>o</span><span>l</span><span>l</span><span>o</span><span>n</span><span>e</span>
+        </h1>
+        <p class="tagline">君のペースを守る、ゆるい相棒。</p>
+      </div>
+    </div>
+
+    <div class="status">
+      <div class="pill" id="connPill" aria-live="polite">接続を確認中…</div>
+      <div class="hint">設定を変えたら、Xのタブを一度更新すると確実です。</div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <!-- 基本 -->
+    <section class="card">
+      <h2>基本</h2>
+
+      <div class="row">
+        <div class="label">
+          <div class="title">ふぉろねを有効にする</div>
+          <div class="desc">必要なときだけ、そっと知らせます。</div>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="enabled" />
+          <span class="track"></span>
+        </label>
+      </div>
+
+      <div class="row">
+        <div class="label">
+          <div class="title">判定のやり方</div>
+          <div class="desc">基本はローカルで動作。必要ならAI判定も使えます。</div>
+        </div>
+        <div class="seg">
+          <input type="radio" name="analysisMode" id="modeLocal" value="local" />
+          <label for="modeLocal">ローカル</label>
+
+          <input type="radio" name="analysisMode" id="modeLLM" value="llm" />
+          <label for="modeLLM">AI判定</label>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="label">
+          <div class="title">注意表示の強さ</div>
+          <div class="desc">値が高いほど厳しめ。おすすめは 70〜80。</div>
+        </div>
+        <div class="slider">
+          <input type="range" id="riskThreshold" min="0" max="100" step="1" />
+          <div class="num">
+            <input type="number" id="riskThresholdNum" min="0" max="100" step="1" />
+            <span>/ 100</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 起動演出 -->
+    <section class="card">
+      <h2>起動演出</h2>
+
+      <div class="row">
+        <div class="label">
+          <div class="title">起動時のふわっと演出</div>
+          <div class="desc">読み込みがあるときでも、焦らなくていいように。</div>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="bootAnimation" />
+          <span class="track"></span>
+        </label>
+      </div>
+
+      <div class="row">
+        <div class="label">
+          <div class="title">表示時間（最低）</div>
+          <div class="desc">短すぎると“チラ見え”になるので少し長め推奨。</div>
+        </div>
+        <div class="numWide">
+          <input type="number" id="bootMinShowMs" min="0" max="12000" step="100" />
+          <span>ms</span>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="label">
+          <div class="title">表示時間（最大）</div>
+          <div class="desc">万一詰まっても、いつまでも残らないための保険。</div>
+        </div>
+        <div class="numWide">
+          <input type="number" id="bootMaxShowMs" min="500" max="20000" step="100" />
+          <span>ms</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- AI判定（任意） -->
+    <section class="card" id="llmCard">
+      <h2>AI判定（任意）</h2>
+      <p class="note">
+        AI判定をONにすると、判定のために投稿テキストの一部を外部APIへ送る場合があります。
+        使わないならOFFのままで大丈夫です。
+      </p>
+
+      <div class="row">
+        <div class="label">
+          <div class="title">AI判定を使う</div>
+          <div class="desc">ローカル判定で“怪しい”ときだけ追加で確認します。</div>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="llmEnabled" />
+          <span class="track"></span>
+        </label>
+      </div>
+
+      <div class="grid2">
+        <div class="field">
+          <label>APIキー</label>
+          <input id="apiKey" type="password" placeholder="入力（保存は端末内のみ）" autocomplete="off" />
+          <div class="tiny">第三者配布用には、sw.jsにキーを埋め込まないでください。</div>
+        </div>
+
+        <div class="field">
+          <label>モデル</label>
+          <input id="model" type="text" placeholder="例: gpt-4o-mini" />
+        </div>
+
+        <div class="field">
+          <label>温度（言い回しの揺れ）</label>
+          <input id="temperature" type="number" min="0" max="2" step="0.1" />
+        </div>
+
+        <div class="field">
+          <label>最大トークン</label>
+          <input id="maxOutputTokens" type="number" min="32" max="2000" step="1" />
+        </div>
+
+        <div class="field">
+          <label>AIに聞く基準（ローカルriskがこの値以上）</label>
+          <input id="candidateThreshold" type="number" min="0" max="100" step="1" />
+        </div>
+
+        <div class="rowMini">
+          <label class="check">
+            <input id="store" type="checkbox" />
+            <span>サーバ保存を要求しない（推奨）</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="row">
+        <button class="btn" id="pingBtn" type="button">接続テスト</button>
+        <div class="spacer"></div>
+        <label class="check">
+          <input id="debug" type="checkbox" />
+          <span>詳細ログを出す</span>
+        </label>
+      </div>
+    </section>
+
+    <!-- 辞書状態 -->
+    <section class="card">
+      <h2>辞書の状態</h2>
+      <p class="note">ローカル判定の“基礎体力”です。ここで読み込み状態を確認できます。</p>
+
+      <div class="row">
+        <button class="btn" id="reloadLexBtn" type="button">辞書状態を表示</button>
+        <div class="spacer"></div>
+        <div class="pill subtle" id="lexPill">未確認</div>
+      </div>
+
+      <div class="lexWrap" id="lexWrap" aria-live="polite"></div>
+    </section>
+
+    <!-- かんたんテスト -->
+    <section class="card">
+      <h2>かんたんテスト</h2>
+      <p class="note">Xを開かなくても、ここで今の判定を試せます（ローカル判定）。</p>
+
+      <div class="field">
+        <label>テスト文章</label>
+        <input id="testText" type="text" placeholder="例: 今すぐ拡散して / DMで / など" />
+      </div>
+
+      <div class="row">
+        <button class="btn primary" id="testBtn" type="button">この文章で判定する</button>
+        <div class="spacer"></div>
+        <div class="pill subtle" id="testPill">未実行</div>
+      </div>
+
+      <pre class="mono" id="testOut" aria-live="polite"></pre>
+    </section>
+
+    <!-- 初期化 -->
+    <section class="card danger">
+      <h2>初期化</h2>
+      <p class="note">
+        判定結果や内部の並びをいったん空にします。
+        「挙動がおかしい」ときの“整えるボタン”です。
+      </p>
+
+      <div class="row">
+        <button class="btn dangerBtn" id="resetBtn" type="button">初期化する</button>
+        <div class="spacer"></div>
+        <div class="tiny">（設定そのものは消えません）</div>
+      </div>
+    </section>
+
+    <!-- 保存 -->
+    <section class="footer">
+      <button class="btn primary big" id="saveBtn" type="button">保存する</button>
+      <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    </section>
+  </main>
+</body>
+</html>
